@@ -173,21 +173,22 @@ problem to the regularization of a bad conditioned matrix.
 \subsection{Linear (finite) system}
 \label{sec:exmatrix}
 
-Let $A\in \mathbb{R}^{m \times n}$ be a matrix with $k \ge n$ and $b
+Let $A\in \mathbb{R}^{m \times n}$ be a matrix with $m \ge n$ and $b
 \in \mathbb{R}^m$, we may want to find a vector $x \in \mathbb{R}^n$
-such that $Ax = b$, this problem is well-defined only if $b\in \im
-(A)$, so a more general request is to find
+such that $Ax = b$, this problem is defined (but not necessarily
+well-posed) if and only if $b\in \im (A)$, so a more general request
+is to find
 \begin{equation}
   \label{eq:minxunreg}
   x = \arg\min _{x\in \mathbb{R}^n} \pa{ \norm{Ax -b} }
 \end{equation}
-for some norm $\norm{\cdot}$, we will use $\norm{\cdot}_2$.
+for some norm $\norm{\cdot}$. We will use $\norm{\cdot}_2$.
 
 We can obtain this equation from various problems, we have see the
 case of the discretization of a Fredholm equation, another common case
-is a step in the Newton method to find the zero of a nonlinear
-function, if the Jacobian matrix is bad conditioned then we will have
-to regularize to obtain a ``good'' decresing direction.
+is the step in the Newton method to find the zero of a nonlinear
+function where the decreasing direction is calculated through the
+inverse of the Jacobian matrix calculated at the point.
 
 Examples of this can be found in \cite{inversesturm} and \cite{atmospheric}
 
@@ -196,7 +197,7 @@ We can write the SVD of $A$, so there exist $U\in \mathbb{R}^{m\times
   _i}_{i=1..n}$ nonnegative with $\sigma _i > \sigma _{i+1}$ such that
 \begin{equation}
   \label{eq:SVDsum}
-  Ax = \sum _{i=1} ^n u_i \sigma _i \ang{x,v_i}
+  Ax = \sum _{i=1} ^n u_i \sigma _i \ang{v_i,x}
 \end{equation}
 If we define
 \[ \Sigma = \begin{pmatrix}
@@ -231,11 +232,7 @@ is the solution of our minimization problem.
 From the definition of condition number we know that if the matrix $A$
 is bad conditioned then a noisy vector $\tilde b = b + \varepsilon$
 with $\varepsilon$ small can cause a big error in $\tilde x = \arg\min _{x}
-\pa{ \norm{ Ax - \tilde b }}$
-
-noisy vector $\tilde b = b + \varepsilon$
-can change a lot the solution $\tilde x$.
-
+\pa{ \norm{ Ax - \tilde b }}$.
 
 A well know propriety of the SVD is that the condition number of $A$
 can be written as
