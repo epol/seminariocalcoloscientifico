@@ -242,6 +242,60 @@ So if the matrix $A$ is bad conditioned then some of the singular
 values (at least $\sigma _k$) will be ``small'' and so regularization
 will have to mitigate this problem.
 
+\section{Regularization methods}
+\label{sec:regularizationmethods}
+
+Let $A\in \mathbb{R}^{m \times n}$ be a bad conditioned matrix, we
+want to find a ``good'' solution for \ref{eq:minxunreg}, i.e. that
+doesn't depend too much on the noise of the input vector $\tilde b$.
+
+Although it is impossible if we ask $\tilde x$ to be a solution for
+\ref{eq:minxunreg}, we can modify slightly to obtain a stable result.
+
+\subsection{TSVD}
+\label{sec:TSVD}
+
+Since we observed that the condition number of $A$ is
+\[ \kappa (A) = \frac{\sigma _1}{\sigma _k} \]
+we may be able to reduce it simpy setting to $0$ some $\sigma _i$, so
+if we choose a integer parameter $\alpha \le k$ we can consider the matrix
+
+\begin{equation}
+  \label{eq:TSVDmatrix}
+  A_\alpha = \sum _{i=1} ^\alpha u_i \sigma _i v_i ^T
+\end{equation}
+
+The conditioning number will be
+\[ \kappa (A_\alpha) = \frac{\sigma _1}{\sigma _\alpha} \le  \frac{\sigma
+  _1}{\sigma _k} = \kappa(A) \]
+since $\sigma _\alpha \ge \sigma _k$.
+
+So the solution is
+\begin{equation}
+  \label{eq:TSVDsolution}
+  x_\alpha = A_\alpha ^+ \tilde b = \sum _{i=1} ^\alpha \frac{1}{\sigma _i}
+  v_i \ang{u_i,\tilde b}
+\end{equation}
+
+If we choose $\alpha$ too large then $A_\alpha$ will be too bad
+conditioned, if we choose $\alpha$ too small then $A_\alpha$ will be
+too different from $A$ and it won't be a good representation of the
+original problem. We will see in section TODO a method to choose a
+good regularization parameter $\alpha$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 \newpage
 \bibliographystyle{alpha}
 \bibliography{inversesturm,atmospheric}
