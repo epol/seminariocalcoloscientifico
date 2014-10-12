@@ -125,11 +125,11 @@ We also have $\sigma _i > \sigma _{i+1}$ and $i \to \infty \Rightarrow
 So we can write
 \begin{equation}
   \label{eq:SVE}
-  K(f) = \sum _{j\in \mathbb{N}} u_j \sigma _j \ang{f,v_j}
+  K(f) = \sum _{i\in \mathbb{N}} u_i \sigma _i \ang{f,v_i}
 \end{equation}
 
-It is known that with the increasing of $j$ the functions $v_j$ and
-$u_j$ becomes more and more oscillating, the fact that $\sigma _j \to
+It is known that with the increasing of $i$ the functions $v_i$ and
+$u_i$ becomes more and more oscillating, the fact that $\sigma _i \to
 0$ dumps that high frequency components when applicating $K$.
 
 
@@ -140,14 +140,14 @@ $g(t)$ is our measure.
 Recalling the SVE of $K$ we can write (for $g\in \im(K)$)
 \begin{equation}
   \label{eq:inverseSVE}
-  K^{-1}(g) = \sum _{j\in \mathbb{N}} v_j \frac{1}{\sigma _j} \ang{g,u_j}
+  K^{-1}(g) = \sum _{i\in \mathbb{N}} v_i \frac{1}{\sigma _i} \ang{g,u_i}
 \end{equation}
 so $K^{-1}$ has a amplifying effect on the higher frequency components
 of $g$.
 
 We have (we won't prove this fact) that $g\in \im (K)$ if and only if
 it satisfies the Picard condition:
-\[ \sum _{j\in \mathbb{N}} \pa{ \frac{1}{\sigma _j} \ang{g,u_j}} ^2 <
+\[ \sum _{i\in \mathbb{N}} \pa{ \frac{1}{\sigma _i} \ang{g,u_i}} ^2 <
 \infty \] 
 
 So if we measure $\tilde g + \varepsilon$ where $\varepsilon$ is a
@@ -170,16 +170,84 @@ If we discretize the problem before regularizing it we'll get a bad
 conditioned matrix, so we have reduced the original regularization
 problem to the regularization of a bad conditioned matrix.
 
+\subsection{Linear (finite) system}
+\label{sec:exmatrix}
+
+Let $A\in \mathbb{R}^{m \times n}$ be a matrix with $k \ge n$ and $b
+\in \mathbb{R}^m$, we may want to find a vector $x \in \mathbb{R}^n$
+such that $Ax = b$, this problem is well-defined only if $b\in \im
+(A)$, so a more general request is to find
+\begin{equation}
+  \label{eq:minxunreg}
+  x = \arg\min _{x\in \mathbb{R}^n} \pa{ \norm{Ax -b} }
+\end{equation}
+for some norm $\norm{\cdot}$, we will use $\norm{\cdot}_2$.
+
+We can obtain this equation from various problems, we have see the
+case of the discretization of a Fredholm equation, another common case
+is a step in the Newton method to find the zero of a nonlinear
+function, if the Jacobian matrix is bad conditioned then we will have
+to regularize to obtain a ``good'' decresing direction.
+
+Examples of this can be found in \cite{inversesturm} and \cite{atmospheric}
+
+We can write the SVD of $A$, so there exist $U\in \mathbb{R}^{m\times
+  m}$, $V\in \mathbb{R}^{n\times n}$ orthogonal and $\set{\sigma
+  _i}_{i=1..n}$ nonnegative with $\sigma _i > \sigma _{i+1}$ such that
+\begin{equation}
+  \label{eq:SVDsum}
+  Ax = \sum _{i=1} ^n u_i \sigma _i \ang{x,v_i}
+\end{equation}
+If we define
+\[ \Sigma = \begin{pmatrix}
+\sigma _1 & & & \\
+& \sigma _2 & &  \\
+& & \ddots & \\
+& & & \sigma _n 
+\end{pmatrix} \]
+we can rewrite the \ref{eq:SVDsum} condition as
+\begin{equation}
+  \label{eq:SVDmat}
+  A = U\Sigma V^T
+\end{equation}
+that is the Singular Values Decomposition of $A$.
+
+We can now write the Moore-Penrose pseudoinverse of $A$ as
+\begin{equation}
+  \label{eq:pseudoinverse}
+  A^+ = \sum _{i=1} ^k \frac{1}{\sigma _i} v_i u_i ^T 
+\end{equation}
+where $k$ is the rank of $A$ that can be written as
+\[ k = \max \set{ i :\; \sigma_i \neq 0 } \]
+
+Using the pseudoinverse it is possible to prove that
+\begin{equation}
+  \label{eq:inverseSVDunreg}
+  x = \sum _{i=1} ^k \frac{1}{\sigma _i} v_i \ang{u_i,b}
+\end{equation}
+is the solution of our minimization problem.
+
+%TODO: rewrite
+From the definition of condition number we know that if the matrix $A$
+is bad conditioned then a noisy vector $\tilde b = b + \varepsilon$
+with $\varepsilon$ small can cause a big error in $\tilde x = \arg\min _{x}
+\pa{ \norm{ Ax - \tilde b }}$
+
+noisy vector $\tilde b = b + \varepsilon$
+can change a lot the solution $\tilde x$.
 
 
+A well know propriety of the SVD is that the condition number of $A$
+can be written as
+\[ \kappa (A) = \norm{A^+}_2\norm{A}_2 = \frac{\sigma _1}{\sigma _k} \]
 
+So if the matrix $A$ is bad conditioned then some of the singular
+values (at least $\sigma _k$) will be ``small'' and so regularization
+will have to mitigate this problem.
 
-
-
-
-
-%\bibliographystyle{alpha}
-%\bibliography{}
+\newpage
+\bibliographystyle{alpha}
+\bibliography{inversesturm,atmospheric}
 
 
 \end{document}
