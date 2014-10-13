@@ -256,9 +256,9 @@ Although it is impossible if we ask $\tilde x$ to be a solution for
 \label{sec:TSVD}
 
 Since we observed that the condition number of $A$ is
-\[ \kappa (A) = \frac{\sigma _1}{\sigma _k} \]
-we may be able to reduce it simpy setting to $0$ some $\sigma _i$, so
-if we choose a integer parameter $\alpha \le k$ we can consider the matrix
+\[ \kappa (A) = \frac{\sigma _1}{\sigma _k} \] we may be able to
+reduce it simpy ignoring some tiny $\sigma _i$, so if we choose a
+integer parameter $\alpha \le k$ we can consider the matrix
 
 \begin{equation}
   \label{eq:TSVDmatrix}
@@ -283,10 +283,39 @@ too different from $A$ and it won't be a good representation of the
 original problem. We will see in section TODO a method to choose a
 good regularization parameter $\alpha$.
 
+The disadvantage of this approach is that it completely ignores the
+components $u_i, i>\alpha$ in $\tilde b$.
 
+\subsection{Tikhonov regularization}
+\label{sec:tikhonov}
 
+Since a too small singular value $\sigma _i$ amplifies ``too much''
+the component $u_i$ of the measure $\tilde b$, a regularization method
+may be to modify slightly the problem \ref{eq:minxunreg} in
+\begin{equation}
+  \label{eq:minxtiki}
+  x_\mu = \arg\min _{x \in \mathbb{R}^n} \pa{ \norm{Ax -\tilde b} + \mu\norm{x}}
+\end{equation}
 
+Tuning the parameter $\mu$ permits to penalize non regular
+solutions. Also in this case we have the problem to choice a ``good''
+regularization parameter $\mu$, in fact a too small $\mu$ gives an
+unregularized solution, a too big $\mu$ would change too much the
+problem and it wouldn't fit anymore the model.
 
+A more general form of the Tikhonov regularization is
+\begin{equation}
+  \label{eq:minxtikgen}
+  x_\mu = \arg\min _{x \in \mathbb{R}^n} \pa{ \norm{Ax -\tilde b} +
+    \norm{L_\mu x}}
+\end{equation}
+where $L_\mu$ is some penalizing matrix. If we choose $L_\mu = \mu
+I$ then we will get the origina Tikhonov form \ref{eq:minxtiki}.
+
+The latter form is usually used when a good penalizing matrix $L$ is
+known (for example if we know how ``smooth'' the solution should be)
+setting $L_\mu = \mu L$. We will assume to not know that matrix $L$,
+so we would use $L_\mu = \mu I$.
 
 
 
