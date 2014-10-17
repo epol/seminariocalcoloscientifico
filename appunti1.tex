@@ -9,7 +9,7 @@
 %\usepackage{fullpage}
 \usepackage{hyperref}
 \usepackage[utf8x]{inputenc}
-\usepackage[italian]{babel}
+\usepackage[english]{babel}
 
 %\setlength{\parindent}{0in}
 
@@ -252,6 +252,19 @@ doesn't depend too much on the noise of the input vector $\tilde b$.
 Although it is impossible if we ask $\tilde x$ to be a solution for
 \ref{eq:minxunreg}, we can modify slightly to obtain a stable result.
 
+A common method to analyze a regularization method is to write its
+filter factors.
+
+\begin{mydef}
+  We say that a regularization method applied to a matrix $A = U
+  \Sigma V^T$ has filter factors $\pa{\varphi _i}$ if and only if the
+  regularized solution can be written has
+  \begin{equation}
+    \label{eq:filterdef}
+    x = \sum _{i=1} ^k \varphi _i \frac{1}{\sigma _i} v_i \ang{u_i,b}
+  \end{equation}
+\end{mydef}
+
 \subsection{TSVD}
 \label{sec:TSVD}
 
@@ -277,6 +290,17 @@ So the solution is
   v_i \ang{u_i,\tilde b}
 \end{equation}
 
+So the filter factors are:
+\begin{equation}
+  \label{eq:TSVDfilter}
+  \varphi ^{\text{TSVD}}_{\alpha,i} = \left\{
+    \begin{matrix}
+      1 \; &1\le i \le \alpha\\
+      0 \; &\alpha < i \le k
+    \end{matrix}
+    \right.
+\end{equation}
+
 If we choose $\alpha$ too large then $A_\alpha$ will be too bad
 conditioned, if we choose $\alpha$ too small then $A_\alpha$ will be
 too different from $A$ and it won't be a good representation of the
@@ -294,7 +318,7 @@ the component $u_i$ of the measure $\tilde b$, a regularization method
 may be to modify slightly the problem \ref{eq:minxunreg} in
 \begin{equation}
   \label{eq:minxtiki}
-  x_\mu = \arg\min _{x \in \mathbb{R}^n} \pa{ \norm{Ax -\tilde b} + \mu\norm{x}}
+  x_\mu = \arg\min _{x \in \mathbb{R}^n} \pa{ \norm{Ax -\tilde b}^2 + \mu\norm{x}^2}
 \end{equation}
 
 Tuning the parameter $\mu$ permits to penalize non regular
@@ -306,23 +330,130 @@ problem and it wouldn't fit anymore the model.
 A more general form of the Tikhonov regularization is
 \begin{equation}
   \label{eq:minxtikgen}
-  x_\mu = \arg\min _{x \in \mathbb{R}^n} \pa{ \norm{Ax -\tilde b} +
-    \norm{L_\mu x}}
+  x_\mu = \arg\min _{x \in \mathbb{R}^n} \pa{ \norm{Ax -\tilde b}^2 +
+    \norm{L_\mu x}^2}
 \end{equation}
 where $L_\mu$ is some penalizing matrix. If we choose $L_\mu = \mu
-I$ then we will get the origina Tikhonov form \ref{eq:minxtiki}.
+I$ then we will get the original Tikhonov form \ref{eq:minxtiki}.
 
 The latter form is usually used when a good penalizing matrix $L$ is
 known (for example if we know how ``smooth'' the solution should be)
 setting $L_\mu = \mu L$. We will assume to not know that matrix $L$,
 so we would use $L_\mu = \mu I$.
 
+We can rewrite the realtion \ref{eq:minxtikgen} as
+\begin{equation*}
+  x_\mu = \arg\min _{x \in \mathbb{R}^n} \pa{ \norm{ 
+      \begin{pmatrix}
+        A \\
+        L_\mu
+      \end{pmatrix}
+      x_\mu -
+      \begin{pmatrix}
+        \tilde b\\
+        0
+      \end{pmatrix}
+      }^2 }
+\end{equation*}
+and we know that the solution is given by the equation
+\begin{equation*}
+  \begin{pmatrix}
+    A^T & L_\mu ^T
+  \end{pmatrix}
+  \begin{pmatrix}
+    A \\
+    L_\mu
+  \end{pmatrix}
+  x_\mu = 
+  \begin{pmatrix}
+    A^T & L_\mu ^T
+  \end{pmatrix}
+  \begin{pmatrix}
+    \tilde b\\
+    0
+  \end{pmatrix}
+\end{equation*}
+that can be rewritten as
+\begin{equation*}
+  \pa{ A^T A + L_\mu^T L_\mu } x_\mu = A^T \tilde b 
+\end{equation*}
 
+So the solution is
+\begin{equation}
+  \label{eq:xtikigen}
+  x_\mu = \pa{ A^T A + L_\mu^T L_\mu }^{-1} A^T \tilde b
+\end{equation}
 
+If we now take the SVD of $A$ and use $L_\mu = \mu I$ we get
+\[  x_\mu = \pa{ V \Sigma ^2 V^T + \mu ^2 I }^{-1} V \Sigma U^T \tilde b  \]
+\[  x_\mu = V^T \pa{\Sigma ^2 + \mu ^2 I }^{-1} \Sigma U^T \tilde b \]
+\[  x_\mu = V^T
+  \begin{pmatrix}
+    \frac{\sigma _1 }{\sigma _1 ^2 + \mu ^2} \\
+    & \frac{\sigma _2 }{\sigma _2 ^2 + \mu ^2} \\
+    & & \ddots \\
+    & & & \frac{\sigma _k }{\sigma _k ^2 + \mu ^2}\\
+    & & & & 0\\
+    & & & & & \ddots \\
+    & & & & & & 0
+  \end{pmatrix}
+  U^T \tilde  b \]
 
+The filter factors are
+\begin{equation}
+  \label{eq:tikfilter}
+  \varphi ^{\text{Tikhonov}} _{\mu,i} = \frac{\sigma _i ^2}{\sigma _i
+    ^2 + \mu ^2}
+\end{equation}
 
+Analyzing thw filter factors we see that Tikhonov regularization on
+one hand doesn't ignore any component of $\tilde b$, on the other it
+dumps all components of it.
 
+\subsection{Tikhonov regularization with the new regularization matrix}
 
+A tradeoff between the two method can be constructed applying Tikhonov
+regularization using the following regularization matrix:
+\begin{equation*}
+  \label{eq:modtikL}
+  L_\mu = D _\mu V^T =
+  \begin{pmatrix}
+    \sqrt{\max\set{\mu ^2 - \sigma _1 ^2,0}} \\
+    & \sqrt{\max\set{\mu ^2 - \sigma _2 ^2,0}} \\
+    & & \ddots
+    & & & \sqrt{\max\set{\mu ^2 - \sigma _n ^2,0}} \\
+  \end{pmatrix}
+  V^T
+\end{equation*}
+
+The solution is
+\begin{align*}
+  x_\mu =& \pa{ A^T A + L_\mu^T L_\mu }^{-1} A^T \tilde b = \\
+  = & \pa{ V \Sigma ^2 V^T + V D_\mu ^2 V^T} ^{-1} V\Sigma U^T \tilde
+  b = \\
+  = & V \pa{ \Sigma ^2 + D_\mu ^2 } ^{-1} \Sigma U^T \tilde b
+\end{align*}
+\begin{equation}
+  \label{eq:modtikx}
+  x_\mu  = \sum _{i=1} ^k \frac{\sigma _i}{\sigma _i ^2 + \max\set{
+      \mu ^2 - \sigma _i ^2 ,0}  }  v_i \ang{u_i,\tilde b}
+\end{equation}
+
+The filter factors are:
+\begin{equation}
+  \label{eq:modtikfilter}
+  \varphi ^{\text{new}} _{\mu,i} = \frac{\sigma _i ^2}{\sigma _i ^2 + \max\set{
+      \mu ^2 - \sigma _i ^2 ,0}  } = \left\{
+  \begin{matrix}
+    1\; & \sigma _i \ge \mu \\
+    \frac{\sigma _i ^2}{\mu ^2} \; & \sigma _i < \mu
+  \end{matrix}
+  \right.
+\end{equation}
+
+So this method, like the TSVD, doesn't dump any component with $\sigma
+_i \ge \mu$ and, like Tikhonov with $L_\mu = \mu I$, it dumps the
+other factors without setting them to $0$.
 
 
 \newpage
