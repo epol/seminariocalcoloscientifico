@@ -112,7 +112,7 @@ then
 
 Under certain hypothesis ($K$ compact) we can write the Singualr Value
 Expansion (SVE) of $K$, so there exist $\set{v_i}_{i\in \mathbb{N}}$
-orthonormal basis of $L^2(\Omega)$, $\set{v_i}_{i\in \mathbb{N}}$
+orthonormal basis of $L^2(\Omega)$, $\set{u_i}_{i\in \mathbb{N}}$
 orthonormal basis of $\im(K)$, $\set{\sigma _i}_{i\in \mathbb{N}}$
 nonnegative set of singualar values such that
 \begin{equation}
@@ -250,9 +250,10 @@ want to find a ``good'' solution for \ref{eq:minxunreg}, i.e. that
 doesn't depend too much on the noise of the input vector $\tilde b$.
 
 Although it is impossible if we ask $\tilde x$ to be a solution for
-\ref{eq:minxunreg}, we can modify slightly to obtain a stable result.
+\ref{eq:minxunreg}, we can modify slightly the problem to obtain a
+stable result.
 
-A common method to analyze a regularization method is to write its
+A common technique to analyze a regularization method is to write its
 filter factors.
 
 \begin{mydef}
@@ -261,7 +262,8 @@ filter factors.
   regularized solution can be written has
   \begin{equation}
     \label{eq:filterdef}
-    x = \sum _{i=1} ^k \varphi _i \frac{1}{\sigma _i} v_i \ang{u_i,b}
+    x = \sum _{i=1} ^k \varphi _i \frac{1}{\sigma _i} v_i
+    \ang{u_i,\tilde b}
   \end{equation}
 \end{mydef}
 
@@ -290,7 +292,7 @@ So the solution is
   v_i \ang{u_i,\tilde b}
 \end{equation}
 
-So the filter factors are:
+And the filter factors are:
 \begin{equation}
   \label{eq:TSVDfilter}
   \varphi ^{\text{TSVD}}_{\alpha,i} = \left\{
@@ -337,9 +339,9 @@ where $L_\mu$ is some penalizing matrix. If we choose $L_\mu = \mu
 I$ then we will get the original Tikhonov form \ref{eq:minxtiki}.
 
 The latter form is usually used when a good penalizing matrix $L$ is
-known (for example if we know how ``smooth'' the solution should be)
-setting $L_\mu = \mu L$. We will assume to not know that matrix $L$,
-so we would use $L_\mu = \mu I$.
+known (for example if we know in wich way the solution has to be
+``smooth'') setting $L_\mu = \mu L$. We will assume to not know that
+matrix $L$, so we would use $L_\mu = \mu I$.
 
 We can rewrite the realtion \ref{eq:minxtikgen} as
 \begin{equation*}
@@ -377,7 +379,6 @@ that can be rewritten as
 \begin{equation*}
   \pa{ A^T A + L_\mu^T L_\mu } x_\mu = A^T \tilde b 
 \end{equation*}
-
 So the solution is
 \begin{equation}
   \label{eq:xtikigen}
