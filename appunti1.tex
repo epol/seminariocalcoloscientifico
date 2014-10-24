@@ -26,10 +26,10 @@
 \newtheorem*{mycor*}{Corollario}
 
 \theoremstyle{definition}
-\newtheorem{mydef}[counter1]{Definizione}
+\newtheorem{mydef}[counter1]{Definition}
 \newtheorem{myes}[counter1]{Esempio}
 \newtheorem{myex}[counter1]{Esercizio}
-\newtheorem*{mydef*}{Definizione}
+\newtheorem*{mydef*}{Definition}
 \newtheorem*{myes*}{Esempio}
 \newtheorem*{myex*}{Esercizio}
 
@@ -119,7 +119,7 @@ nonnegative set of singualar values such that
   \label{eq:SVErealtion}
   K(v_j) = \sigma _j u_j
 \end{equation}
-We also have $\sigma _i > \sigma _{i+1}$ and $i \to \infty \Rightarrow
+We also have $\sigma _i \ge \sigma _{i+1}$ and $i \to \infty \Rightarrow
 \sigma _i \to 0$.
 
 So we can write
@@ -194,7 +194,7 @@ Examples of this can be found in \cite{inversesturm} and \cite{atmospheric}
 
 We can write the SVD of $A$, so there exist $U\in \mathbb{R}^{m\times
   m}$, $V\in \mathbb{R}^{n\times n}$ orthogonal and $\set{\sigma
-  _i}_{i=1..n}$ nonnegative with $\sigma _i > \sigma _{i+1}$ such that
+  _i}_{i=1..n}$ nonnegative with $\sigma _i \ge \sigma _{i+1}$ such that
 \begin{equation}
   \label{eq:SVDsum}
   Ax = \sum _{i=1} ^n u_i \sigma _i \ang{v_i,x}
@@ -455,6 +455,31 @@ The filter factors are:
 So this method, like the TSVD, doesn't dump any component with $\sigma
 _i \ge \mu$ and, like Tikhonov with $L_\mu = \mu I$, it dumps the
 other factors without setting them to $0$.
+
+Since we would like the matrix $L_\mu$ to be of small norm (so that we
+can get an accurate approximation of $x$), we will show that $L_\mu$
+is optimal in Frobenius norm (which is given by $\norm{M}_F = \sqrt{
+  \mathrm{trace} \pa{ M^T M } }$ for a generic matrix $M$)
+
+\begin{myteo}
+  Let $M \in \mathbb{R}^{n\times n}$ be a symmetric matrix with
+  spectral factorization $M = V \Lambda V^T$, where $V \in
+  \mathbb{R}^{n \times n}$ is orthonormal and $\Lambda = \mathrm{diag} \pa{
+    \lambda _1, ... \lambda _n}$. Assume that $\mu \ge \min _{1\le
+    j\le n} \lambda _j$, let the diagonal matrix $C_\mu = \mathrm{diag}
+  \pa{ c_1 , ... c_n}\in \mathbb{R}^{n\times n}$ have the entries $c_j
+  = \max \set{\mu - \lambda _j, 0}$.
+  
+  Then the matrix $M + V C_\mu V^T$ has the smallest eigenvalue $\mu$
+  and the distance in the Frobenius norm between $M$ and the closest
+  symmetric matrix with the smallest eigenvalue $\mu$ is $\norm{ C_\mu
+  }_F$
+\end{myteo}
+
+\begin{mycor}
+  If $\sigma _1,\mu > 0$ then
+  \[ \norm{ L_\mu }^2 _F < \norm{ \mu I} ^2_F \]
+\end{mycor}
 
 
 \newpage
