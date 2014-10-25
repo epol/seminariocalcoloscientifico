@@ -520,6 +520,34 @@ where $\eta > 1$ is a user defined constant.
 In \cite{discrepbook} is shown that if $\norm{\varepsilon} \to 0$ then
 $x _\varepsilon \to x$
 
+If we have a regularization method that can be written with filter
+factors the discrepancy can be written as
+\begin{align*}
+  \norm{ Ax_\lambda - \tilde b } =& \norm{ U \Sigma V^T V F \Sigma
+    ^{-1} U^T \tilde b - \tilde b} =\\
+  =& \norm { U F U^T \tilde b - \tilde b} =\\
+  = & \norm{ F U^T \tilde b - U^T \tilde b } =\\
+  =& \norm{ \pa{F-I} U^T \tilde b} =\\
+  =& \sqrt{\sum _{i=1} ^n \bra{ \pa{ \varphi _i -1} \ang{ u_i, \tilde b} } ^2}
+\end{align*}
+where $F = \mathrm{diag}\pa{ \varphi _1 ,... , \varphi _n}$ with
+$\varphi _i$ are the filters factor for the choosen method.
+
+If we are using the TSVD the discrepancy for the parameter $\alpha$ is
+given by
+\[ \sqrt{\sum _{i=\alpha +1} ^n \bra{ \ang{ u_i, \tilde b} } ^2 } \]
+and it can be calculated in $O(n^2)$ total time ($O(n)$ if we already
+know $U^T \tilde b$).
+
+For Tikhonov regularization we can use the Newton method to find a
+zero for the function
+\[ f(\mu) = \sum _{i=1} ^n \bra{ \pa{ \varphi _{\mu,i} -1} \ang{ u_i,
+    \tilde b} } ^2 - \eta ^2 \norm{\varepsilon} ^2 \] 
+the first derivative for this function is
+\[ f'(\mu) = 2 \sum _{i=1} ^n \pa{ \varphi _{\mu,i} -1} \varphi
+_{\mu,i} ' \ang{ u_i, \tilde b} ^2 \]
+
+
 
 \newpage
 \bibliographystyle{alpha}
