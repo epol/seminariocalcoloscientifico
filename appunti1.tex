@@ -503,26 +503,27 @@ We will focus on the first
 
 \subsection{Discrepancy principle}
 
-This method (introduced in V. A. Morozov. On the solution of
-functional equations by the method of regularization. Soviet
-Math. Dokl., 7:414–417, 1966) can be applied when a fairly accurate
-approximation of the error $\norm{\varepsilon}$ is available, in this
-case we take the ``most regular'' solution that generate an error
-compatible with $\norm{\varepsilon}$. In other terms if $\lambda$ is
-our regularization parameter (and for sake of simplicity we assume
-that a bigger $\lambda$ represent a more regular solution) then we
-take
+This method (introduced in \cite{discreporig}) can be applied when a
+fairly accurate approximation of the error $\norm{\varepsilon}$ is
+available, in this case we take the ``most regular'' solution that
+generate an error compatible with $\norm{\varepsilon}$. In other terms
+if $\lambda$ is our regularization parameter (and for sake of
+simplicity we assume that a bigger $\lambda$ represent a more regular
+solution) then we take
 \begin{equation}
   \label{eq:discrepancygen}
-  \lambda = \max \set { \lambda :\; \norm{ Ax_\lambda -
+  \lambda _\varepsilon = \max \set { \lambda :\; \norm{ Ax_\lambda -
       \tilde b} \le \eta \norm{\varepsilon}} 
 \end{equation}
-where $\eta > 1$ is a user defined constant
+where $\eta > 1$ is a user defined constant.
+
+In \cite{discrepbook} is shown that if $\norm{\varepsilon} \to 0$ then
+$x _\varepsilon \to x$
 
 
 \newpage
 \bibliographystyle{alpha}
-\bibliography{inversesturm,atmospheric}
+\bibliography{inversesturm,atmospheric,discrepbook,discreporig}
 
 
 \end{document}
