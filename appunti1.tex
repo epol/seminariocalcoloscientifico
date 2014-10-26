@@ -457,10 +457,11 @@ So this method, like the TSVD, doesn't dump any component with $\sigma
 _i \ge \mu$ and, like Tikhonov with $L_\mu = \mu I$, it dumps the
 other factors without setting them to $0$.
 
-Since we would like the matrix $L_\mu$ to be of small norm (so that we
-can get an accurate approximation of $x$), we will show that $L_\mu$
-is optimal in Frobenius norm (which is given by $\norm{M}_F = \sqrt{
-  \mathrm{trace} \pa{ M^T M } }$ for a generic matrix $M$)
+Since we would like the matrix $L_\mu ^T L_\mu$ to be of small norm
+(so that we can get an accurate approximation of $x$), we will show
+that $L_\mu ^T L_\mu$ is optimal in Frobenius norm (which is given by
+$\norm{M}_F = \sqrt{ \mathrm{trace} \pa{ M^T M } }$ for a generic
+matrix $M$)
 
 \begin{myteo}
   Let $M \in \mathbb{R}^{n\times n}$ be a symmetric matrix with
@@ -477,12 +478,23 @@ is optimal in Frobenius norm (which is given by $\norm{M}_F = \sqrt{
   }_F$
 \end{myteo}
 
+Recalling that the solution, for a generic $L_\mu$ penalization
+matrix, is given by
+\[ x = \pa{ A^T A + L_\mu^T L_\mu }^{-1} A^T \tilde b \] we are
+interested in finding the ``best'' matrix $L_\mu^T L_\mu$ such that
+$A^T A + L_\mu^T L_\mu$ has $\mu$ as the smallest eigenvale, the best
+choice is the closest matrix to $A^T A$. So if we apply the theorem
+with $M = A^T A$ and $C_\mu = D_\mu ^2$ then we see that $A_\mu ^T
+A_\mu + L_\mu ^T L_\mu = M + V C_\mu V^T$ is optimal in the Frobenius
+norm.
+
 \begin{mycor}
   If $\sigma _1,\mu > 0$ then
   \[ \norm{ L_\mu }^2 _F < \norm{ \mu I} ^2_F \]
 \end{mycor}
 
-TODO: finire e spiegare perché questo metodo è meglio
+This corollary shows us that we are doing better than the standard
+Tikhonov method.
 
 \section{Choose the regularization parameter: discrepancy principle}
 \label{sec:discrepancy}
