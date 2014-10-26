@@ -101,7 +101,7 @@
 \subtitle{Scelta di una nuova matrice di penalizzazione nel caso in
   cui non ne sia nota una dal problema}
 \author{Enrico Polesel}
-\institute[Scuola Normale Superiore]{Scuola Normale Superiore}
+%\institute[Scuola Normale Superiore]{Scuola Normale Superiore}
 \date{28 ottobre 2014}
 
 %\author[Enrico Polesel]{\begin{tabular}{r@{ }l}
@@ -143,9 +143,9 @@
 
 \begin{frame}{L'equazione}
   Molti problemi possono essere modellati con l'equazione
-  \begin{equation*}
-    g(t) = \intl _{\Omega} k(t,s) f(s) \de s
-  \end{equation*}
+  \begin{block}{Equazione integrale di Fredholm}
+    \[ g(t) = \intl _{\Omega} k(t,s) f(s) \de s \]
+  \end{block}
   dove $f(s)\in L^2(\Omega)$ è la funzione cercata, $g(s)\in
   L^2(\Omega)$ e la misura che possiamo effettuare e $k(t,s)\in
   L^2(\Omega \times \Omega)$ è detto \textit{kernel}
@@ -170,9 +170,11 @@
   l'immagini di tali componenti.
 \end{frame}
 
-\begin{frame}{SVE}
+\begin{frame}{Espansione in valori singolari}
   Sotto opportune ipotesi possiamo scrivere la sua azione come
-  \[ K(v_j) = \sigma _j u_j \]
+  \begin{block}{SVE}
+    \[ K(v_j) = \sigma _j u_j \]
+  \end{block}
   Dove
   \begin{itemize}
   \item $\set{v_i}_{i\in \mathbb{N}}$ è una base ortonormale di
@@ -249,18 +251,21 @@
   per una qualche norma $\norm{\cdot}$. Noi useremo $\norm{\cdot}_2$.
 \end{frame}
 
-\begin{frame}{SVD}
+\begin{frame}{Decomposizione in valori singolari}
   Sappiamo che possiamo scrivere
-  \[ A = U\Sigma V^T \] 
+  \begin{block}{SVD}
+    \[ A = U\Sigma V^T \] 
+  \end{block}
   con $V\in \mathbb{R}^{n\times n}$,$U\in \mathbb{R}^{m\times m}$
   ortogonali, $\set{\sigma _i}_{i=1..n}$ nonnegativi con $\sigma _i
   \ge \sigma _{i+1}$ e tali che
-  \[ \Sigma = \begin{pmatrix}
-    \sigma _1 & & & \\
-    & \sigma _2 & &  \\
-    & & \ddots & \\
-    & & & \sigma _n 
-  \end{pmatrix} \]
+%  \[ \Sigma = \begin{pmatrix}
+%    \sigma _1 & & & \\
+%    & \sigma _2 & &  \\
+%    & & \ddots & \\
+%    & & & \sigma _n 
+%  \end{pmatrix} \]
+  \[ \Sigma = \mathrm{diag} \pa{ \sigma_1,...,\sigma _n} \]
   
   Possiamo anche scrivere
   \[ Ax = \sum _{i=1} ^n u_i \sigma _i \ang{v_i,x} \]
@@ -271,16 +276,19 @@
   soluzione del nostro problema di minimizzazione
   \[ x = \sum _{i=1} ^k \frac{1}{\sigma _i} v_i \ang{u_i,b} \]
   \[ x = A^+ b \]
-  con
-  \[ A^+ = \sum _{i=1} ^k \frac{1}{\sigma _i} v_i u_i ^T\]
-  dove $k$ è il rango di $A$, cioè
-  \[ k = \max \set{ i :\; \sigma_i \neq 0 } \]
+  \begin{block}{Pseudoinversa di Moore-Penrose}
+    \[ A^+ = \sum _{i=1} ^k \frac{1}{\sigma _i} v_i u_i ^T\]
+  \end{block}
+  dove $k$ è il rango di $A$
+%  \[ k = \max \set{ i :\; \sigma_i \neq 0 } \]
 \end{frame}
 
 \begin{frame}{Condizionamento}
   Sappiamo che il condizionamento di $A$ si può scrivere come
-  \[ \kappa (A) = \norm{A^+}_2\norm{A}_2 = \frac{\sigma _1}{\sigma
+  \begin{block}{Condizionamento in funzione dei valori singolari}
+    \[ \kappa (A) = \norm{A^+}_2\norm{A}_2 = \frac{\sigma _1}{\sigma
     _k} \]
+  \end{block}
 
   Quindi per matrici mal condizonate avremo che $\sigma _k$ sarà
   piccolo (rispetto a $\sigma_1$)
@@ -300,6 +308,187 @@
   Ed infatti, come ci aspettavamo, piccoli valori di $\sigma_k$
   amplificano di molto l'errore introdotto da $\varepsilon$.
 \end{frame}
+
+
+\section{Metodi di regolarizzazione}
+
+\subsection{Introduzione}
+
+\begin{frame}{Problema}
+  Supponiamo di avere $A\in \mathbb{R}^{m \times n}$ mal condizionata
+  e $\tilde b = b + \varepsilon$ vettore dei termini noti
+  ``rumoroso''. Cerchiamo un $\tilde x$ tale che
+  \begin{itemize}
+  \item $\norm{A\tilde x-\tilde b}$ sia vicino $\min \limits_x
+    \pa{\norm{A x - \tilde b}}$
+  \item $\tilde x$ sia stabile per piccole variazioni di $\tilde b$,
+    cioè chiediamo che la soluzione sia ``regolare''
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Fattori di filtro}
+  \begin{mydef}
+    Data una matrice $A$ e un metodo di regolarizzazione diciamo che
+    quest'ultimo ha fattori di filtro $\pa{\varphi _i}$ se la
+    soluzione può essere scritta come
+    \[ x = \sum _{i=1} ^k \varphi _i \frac{1}{\sigma _i} v_i
+    \ang{u_i,\tilde b} \]
+  \end{mydef}
+
+  Osserviamo che se tutti i fattori di filtro sono uguali a $1$ allora
+  otteniamo la soluzione non regolarizzata.
+\end{frame}
+
+\subsection{TSVD}
+
+\begin{frame}{Il metodo}
+  Abbiamo già osservato che
+  \[ \kappa (A) = \frac{\sigma _1}{\sigma _k} \]
+  
+  Un metodo molto semplice di regolarizzazione è annullare i valori
+  singolari piccoli, cioè sostituire $A$ con
+  \[ A_\alpha = \sum _{i=1} ^\alpha u_i \sigma _i v_i ^T \]
+  dove $1\le \alpha \le k$ intero.
+  \vfill
+  
+  Il suo condizionamento sarà
+  \[ \kappa (A_\alpha) = \frac{\sigma _1}{\sigma _\alpha} \le
+  \frac{\sigma _1}{\sigma _k} = \kappa(A) \]
+\end{frame}
+
+\begin{frame}{Fattori di filtro}
+  La soluzione del problema regolarizzato con la TSVD di parametro
+  $\alpha$ è
+  \[ x_\alpha = A_\alpha ^+ \tilde b = \sum _{i=1} ^\alpha
+  \frac{1}{\sigma _i} v_i \ang{u_i,\tilde b} \]
+  \vfill
+
+  Quindi i fattori di filtro sono
+  \begin{block}{Fattori di filtro della TSVD}
+  \[ \varphi ^{\text{TSVD}}_{\alpha,i} = \left\{
+    \begin{matrix}
+      1 \; &1\le i \le \alpha\\
+      0 \; &\alpha < i \le k
+    \end{matrix}
+    \right. \]
+  \end{block}
+  \vfill
+  
+  Quindi questo approcio ignora completamente le componenti $u_i,
+  i>\alpha$ di $\tilde b$.
+\end{frame}
+
+\begin{frame}{Parametro di regolarizzazione}
+  La soluzione regolarizzata dipende dalla scelta del parametro
+  $\alpha$. Vediamo che:
+  \begin{itemize}
+  \item per valori troppo grandi di $\alpha$ la matrice $A_\alpha$
+    rimane mal condizionata
+  \item per valori troppo piccoli di $\alpha$ la matrice $A_\alpha$ è
+    troppo diversa da $A$ e il problema non rispetta più il problema
+    orginale
+  \end{itemize}
+\end{frame}
+
+
+\subsection{Regolarizzazione di Tikhonov}
+
+\begin{frame}{Tikhonov standard}
+  Modifichiamo il problema cercando
+  \[ x_\mu = \arg\min _{x \in \mathbb{R}^n} \pa{ \norm{Ax -\tilde b}^2
+    + \mu\norm{x}^2} \]
+  \vfill
+  
+  In questo modo penalizziamo soluzioni di norma grande derivanti
+  dall'amplificazione dell'errore da parte dei valori singolari piccolo
+\end{frame}
+
+\begin{frame}{Tikhonov generale}
+  In generale possiamo scrivere la regolarizzazione di Tikhonov come
+  \begin{block}{Forma generale di Tikhonov}
+  \[ x_\mu = \arg\min _{x \in \mathbb{R}^n} \pa{ \norm{Ax -\tilde b}^2 +
+    \norm{L_\mu x}^2} \]
+  \end{block}
+  con $L_\mu$ una matrice di penalizzazione.
+
+  In alcuni casi è utile usare questa forma perché è nota (dal
+  problema) una buona matrice di penalizzazione $L$ e quindi si prende
+  $L_\mu = \mu L$.
+  \vfill
+
+  Se $L_\mu = \mu I$ allora ritorniamo alla regolarizzazione di
+  Tikhonov standard.
+\end{frame}
+
+\begin{frame}{Soluzione}
+  Riscriviamo il problema di minimo come
+  \[ x_\mu = \arg\min _{x \in \mathbb{R}^n} \pa{ \norm{ 
+      \begin{pmatrix}
+        A \\
+        L_\mu
+      \end{pmatrix}
+      x_\mu -
+      \begin{pmatrix}
+        \tilde b\\
+        0
+      \end{pmatrix}
+      }^2 }\]
+  la soluzione è data dall'equazione
+  \[ \begin{pmatrix}
+    A^T & L_\mu ^T
+  \end{pmatrix}
+  \begin{pmatrix}
+    A \\
+    L_\mu
+  \end{pmatrix}
+  x_\mu = 
+  \begin{pmatrix}
+    A^T & L_\mu ^T
+  \end{pmatrix}
+  \begin{pmatrix}
+    \tilde b\\
+    0
+  \end{pmatrix} \]
+  che può essere riscritta come
+  \[ \pa{ A^T A + L_\mu^T L_\mu } x_\mu = A^T \tilde b  \]
+\end{frame}
+
+\begin{frame}
+  Se supponiamo ora che $L_\mu = \mu I$ e che $A = U\Sigma V^T$
+  possiamo scrivere
+  \[  x_\mu = \pa{ V \Sigma ^2 V^T + \mu ^2 I }^{-1} V \Sigma U^T \tilde b  \]
+  \[  x_\mu = V^T \pa{\Sigma ^2 + \mu ^2 I }^{-1} \Sigma U^T \tilde b \]
+  \[  x_\mu = V^T
+  \begin{pmatrix}
+    \frac{\sigma _1 }{\sigma _1 ^2 + \mu ^2} \\
+    & \frac{\sigma _2 }{\sigma _2 ^2 + \mu ^2} \\
+    & & \ddots \\
+    & & & \frac{\sigma _k }{\sigma _k ^2 + \mu ^2}\\
+    & & & & 0\\
+    & & & & & \ddots \\
+    & & & & & & 0
+  \end{pmatrix}
+  U^T \tilde  b \]
+\end{frame}
+
+\begin{frame}{Fattori di filtro}
+  Dalla scrittura della soluzione otteniamo che i fattori di filtro
+  per Tikhonov standard sono
+  \begin{block}{Fattori di filtro per Tikhonov standard}
+  \[ \varphi ^{\text{Tikhonov}} _{\mu,i} = \frac{\sigma _i ^2}{\sigma _i
+    ^2 + \mu ^2} \]
+  \end{block}
+  \vfill
+  
+  Quindi questo metodo da una parte, a differenza della TSVD, tiene
+  conto di tutte le componenti di $\tilde b$, dall'altra le attenua
+  tutte, comprese quelle ``regolari''
+\end{frame}
+
+
+
+
+
 
 
 
