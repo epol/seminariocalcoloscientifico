@@ -1,0 +1,313 @@
+\documentclass{beamer}
+%\usetheme{PaloAlto}
+%\usetheme{Berlin}
+\usetheme{Ilmenau}
+\usecolortheme{seahorse}
+
+%\usepackage[utf8]{inputenc}
+%\usepackage{default}
+%\usepackage[italian]{babel}
+
+%\usepackage{titleref}
+%\usepackage{zref-titleref}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{xfrac}
+\usepackage[all]{xy}
+\usepackage{mathtools}
+\usepackage{graphicx}
+%\usepackage{fullpage}
+\usepackage{hyperref}
+\usepackage[utf8x]{inputenc}
+\usepackage[italian]{babel}
+\usepackage{mathtools}
+
+%\usepackage{pdftricks}
+%\begin{psinputs}
+%   \usepackage[pdf]{pstricks}
+ %  \usepackage{multido}
+%\end{psinputs}
+
+\usepackage{ulem}
+
+\setlength{\parindent}{0in}
+
+\newcounter{counter1}
+
+\theoremstyle{plain}
+\newtheorem{myteo}[counter1]{Teorema}
+\newtheorem{mylem}[counter1]{Lemma}
+\newtheorem{mypro}[counter1]{Proposizione}
+\newtheorem{mycor}[counter1]{Corollario}
+\newtheorem*{myteo*}{Teorema}
+\newtheorem*{mylem*}{Lemma}
+\newtheorem*{mypro*}{Proposizione}
+\newtheorem*{mycor*}{Corollario}
+
+\theoremstyle{definition}
+\newtheorem{mydef}[counter1]{Definizione}
+\newtheorem{myes}[counter1]{Esempio}
+\newtheorem{myex}[counter1]{Esercizio}
+\newtheorem*{mydef*}{Definizione}
+\newtheorem*{myes*}{Esempio}
+\newtheorem*{myex*}{Esercizio}
+
+\theoremstyle{remark}
+\newtheorem{mynot}[counter1]{Nota}
+\newtheorem{myoss}[counter1]{Osservazione}
+\newtheorem*{mynot*}{Nota}
+\newtheorem*{myoss*}{Osservazione}
+
+\newcommand{\obar}[1]{\overline{#1}}
+\newcommand{\ubar}[1]{\underline{#1}}
+
+\newcommand{\set}[1]{\left\{#1\right\}}
+\newcommand{\pa}[1]{\left(#1\right)}
+\newcommand{\ang}[1]{\left<#1\right>}
+\newcommand{\bra}[1]{\left[#1\right]}
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+
+\newcommand{\pfrac}[2]{\pa{\frac{#1}{#2}}}
+\newcommand{\bfrac}[2]{\bra{\frac{#1}{#2}}}
+\newcommand{\psfrac}[2]{\pa{\sfrac{#1}{#2}}}
+\newcommand{\bsfrac}[2]{\bra{\sfrac{#1}{#2}}}
+
+\newcommand{\der}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\pder}[2]{\pfrac{\partial #1}{\partial #2}}
+\newcommand{\sder}[2]{\sfrac{\partial #1}{\partial #2}}
+\newcommand{\psder}[2]{\psfrac{\partial #1}{\partial #2}}
+
+\newcommand{\intl}{\int \limits}
+
+\DeclareMathOperator{\de}{d}
+\DeclareMathOperator{\id}{Id}
+\DeclareMathOperator{\len}{len}
+
+\DeclareMathOperator{\gl}{GL}
+\DeclareMathOperator{\aff}{Aff}
+\DeclareMathOperator{\isom}{Isom}
+
+\DeclareMathOperator{\im}{Im}
+
+
+
+\begin{document}
+
+
+\title[Un nuovo metodo di regolarizzazione di Tikhonov]{Un nuovo metodo di regolarizzazione di Tikhonov}
+\subtitle{Scelta di una nuova matrice di penalizzazione nel caso in
+  cui non ne sia nota una dal problema}
+\author{Enrico Polesel}
+\institute[Scuola Normale Superiore]{Scuola Normale Superiore}
+\date{28 ottobre 2014}
+
+%\author[Enrico Polesel]{\begin{tabular}{r@{ }l}
+%Autore: &  Enrico Polesel \\ 
+%Relatore: & Andrea Mennucci
+%\end{tabular}
+%}
+
+
+
+\begin{frame}[plain]
+  \titlepage
+\end{frame}
+
+\begin{frame}[plain]
+ \frametitle{Indice}
+ \tableofcontents
+\end{frame}
+
+
+%\AtBeginSection[]
+%{
+%  \begin{frame}{\secname}
+%    \tableofcontents[currentsection]
+%  \end{frame}
+%}
+
+
+\AtBeginSubsection[]
+{
+  \begin{frame}[plain]{\secname $\rightarrow$ \subsecname}
+    \tableofcontents[currentsubsection]
+  \end{frame}
+}
+
+\section{Introduzione}
+
+\subsection{Equazioni integrali di Fredholm}
+
+\begin{frame}{L'equazione}
+  Molti problemi possono essere modellati con l'equazione
+  \begin{equation*}
+    g(t) = \intl _{\Omega} k(t,s) f(s) \de s
+  \end{equation*}
+  dove $f(s)\in L^2(\Omega)$ è la funzione cercata, $g(s)\in
+  L^2(\Omega)$ e la misura che possiamo effettuare e $k(t,s)\in
+  L^2(\Omega \times \Omega)$ è detto \textit{kernel}
+  \vfill
+  
+  In modo naturale abbiamo un operatore lineare
+  \[ \begin{matrix}
+    K:\; &L^2(\Omega) &\longrightarrow &L^2(\Omega)\\
+    & f &\longrightarrow & \intl _\Omega k(\cdot , s) f(s) \de s 
+  \end{matrix} \]
+
+\end{frame}
+
+\begin{frame}{Componenti ad alta frequenza}
+  Per Riemann-Lebesgue abbiamo ( con $\Omega = \mathbb{R}$) che
+  l'operatore $K$ attuisce le componenti ad alta frequenza di $f$,
+  infatti
+  \[ \lim _{z \to \infty} \intl _\mathbb{R} k(t,s) e^{-zs} \de s =
+  0 \]
+
+  Quindi da un eventuale $K^{-1}$ ci aspettiamo che questo amplifichi
+  l'immagini di tali componenti.
+\end{frame}
+
+\begin{frame}{SVE}
+  Sotto opportune ipotesi possiamo scrivere la sua azione come
+  \[ K(v_j) = \sigma _j u_j \]
+  Dove
+  \begin{itemize}
+  \item $\set{v_i}_{i\in \mathbb{N}}$ è una base ortonormale di
+    $L^2(\Omega)$
+  \item $\set{u_i}_{i\in \mathbb{N}}$ è una base ortonormale di
+    $\im(K)$
+  \item $\set{\sigma _i}_{i\in \mathbb{N}}$ sono nonnegativi, $\sigma
+    _i \ge \sigma _{i+1}$ e $\sigma _i \to 0$ per $i \to \infty$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Inversa di $K$}
+  Per $g \in \im{K}$ possiamo scrivere
+  \[ K^{-1}(g) = \sum _{i\in \mathbb{N}} v_i \frac{1}{\sigma _i}
+  \ang{g,u_i} \]
+  \vfill
+  Si può dimostare che $g\in \im (K)$ se e solo se $g$ rispetta le
+  condizioni di Picard
+  \[ \sum _{i\in \mathbb{N}} \pa{ \frac{1}{\sigma _i} \ang{g,u_i}} ^2
+  < \infty \]
+\end{frame}
+
+\begin{frame}{Perturbazioni di $g$}
+  Osserviamo che una piccola perturbazione di $g$ (dovuta, per
+  esempio, all'errore di misura) può non rispettare le condizioni di
+  Picard:
+  \begin{align*}
+    & \sum _{i\in \mathbb{N}} \pa{ \frac{1}{\sigma _i} \ang{\tilde
+        g,u_i}} ^2 = \sum _{i\in \mathbb{N}} \pa{ \frac{1}{\sigma _i}
+      \ang{g + \varepsilon,u_i}} ^2
+    = \\
+    =&\underbrace{\sum _{i\in \mathbb{N}} \pa{
+          \frac{1}{\sigma _i} \ang{g,u_i}} ^2} _{<\infty}
+    + \underbrace{\sum _{i\in \mathbb{N}} \pa{ \frac{1}{\sigma _i}
+      \ang{\varepsilon,u_i}} ^2} _{???}
+  \end{align*}
+\end{frame}
+
+\begin{frame}{Discretizzazione}
+  Per risolvere numericamente un'equazione integrale di Fredholm
+  dobbiamo discretizzare il probelema, possiamo decidere di farlo
+  prima o dopo la regolarizzazione.
+  \vfill
+  
+  Metodi comuni di discretizzazione sono metodi di collocazione e
+  metodi di proiezione.
+  \vfill
+  
+  Se discretizziamo il problema prima di regolarizzarlo allora
+  otterremo una matrice mal condizionata.
+\end{frame}
+
+
+
+\subsection{Sistemi lineari mal condizionati}
+
+\begin{frame}{Esempi}
+  Abbiamo già osservato che se discretizziamo un'equazione integrale di
+  Fredholm senza regolarizzarla otteniamo una matrice mal
+  condizionata.
+  \vfill
+  
+  Nel cercare gli zeri di alcune funzioni con il metodo di Newton
+  capita che lo Jacobiano risultante sia mal condizionato, questo è un
+  altro caso in cui è necessaria una regolarizzazione.
+\end{frame}
+
+\begin{frame}{Il problema}
+  Sia $A\in \mathbb{R}^{m \times n}$ una matrice con $m \ge n$ e $b
+  \in \mathbb{R}^m$, il nostro problema è trovare $x \in \mathbb{R}^n$
+  tale che $Ax = b$, visto che il problema potrebbe essere impossibile
+  allora chiediamo di trovare
+  \[ x = \arg\min _{x\in \mathbb{R}^n} \pa{ \norm{Ax -b} } \]
+  per una qualche norma $\norm{\cdot}$. Noi useremo $\norm{\cdot}_2$.
+\end{frame}
+
+\begin{frame}{SVD}
+  Sappiamo che possiamo scrivere
+  \[ A = U\Sigma V^T \] 
+  con $V\in \mathbb{R}^{n\times n}$,$U\in \mathbb{R}^{m\times m}$
+  ortogonali, $\set{\sigma _i}_{i=1..n}$ nonnegativi con $\sigma _i
+  \ge \sigma _{i+1}$ e tali che
+  \[ \Sigma = \begin{pmatrix}
+    \sigma _1 & & & \\
+    & \sigma _2 & &  \\
+    & & \ddots & \\
+    & & & \sigma _n 
+  \end{pmatrix} \]
+  
+  Possiamo anche scrivere
+  \[ Ax = \sum _{i=1} ^n u_i \sigma _i \ang{v_i,x} \]
+\end{frame}
+
+\begin{frame}{Pseudoinversa di Moore-Penrose}
+  Dalla scomposizione in valori singolari di $A$ possiamo scrivere la
+  soluzione del nostro problema di minimizzazione
+  \[ x = \sum _{i=1} ^k \frac{1}{\sigma _i} v_i \ang{u_i,b} \]
+  \[ x = A^+ b \]
+  con
+  \[ A^+ = \sum _{i=1} ^k \frac{1}{\sigma _i} v_i u_i ^T\]
+  dove $k$ è il rango di $A$, cioè
+  \[ k = \max \set{ i :\; \sigma_i \neq 0 } \]
+\end{frame}
+
+\begin{frame}{Condizionamento}
+  Sappiamo che il condizionamento di $A$ si può scrivere come
+  \[ \kappa (A) = \norm{A^+}_2\norm{A}_2 = \frac{\sigma _1}{\sigma
+    _k} \]
+
+  Quindi per matrici mal condizonate avremo che $\sigma _k$ sarà
+  piccolo (rispetto a $\sigma_1$)
+\end{frame}
+
+\begin{frame}{Effetto di errori in $b$}
+  Supponendo che $\tilde b = b+ \varepsilon$, cioè è affetto da
+  errore, abbiamo che 
+  
+  \begin{align*}
+    x =& \sum _{i=1} ^k \frac{1}{\sigma _i} v_i \ang{u_i,b +
+      \varepsilon} = \\
+    =& \sum _{i=1} ^k \frac{1}{\sigma _i} v_i \ang{u_i,b} + \sum
+    _{i=1} ^k \frac{1}{\sigma _i} v_i \ang{u_i,\varepsilon}
+  \end{align*}
+
+  Ed infatti, come ci aspettavamo, piccoli valori di $\sigma_k$
+  amplificano di molto l'errore introdotto da $\varepsilon$.
+\end{frame}
+
+
+
+\end{document}
+
+
+
+
+
+
+
