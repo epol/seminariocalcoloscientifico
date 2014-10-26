@@ -129,13 +129,13 @@ So we can write
 \end{equation}
 
 It is known that with the increasing of $i$ the functions $v_i$ and
-$u_i$ becomes more and more oscillating, the fact that $\sigma _i \to
+$u_i$ becomes more and more oscillating, in fact that $\sigma _i \to
 0$ dumps that high frequency components when applicating $K$.
 
 
-If we assume that $K$ is injective we can define $K^{-1}:\; \im(K) \to
-L^2(\Omega)$, our problem now is to calculate $K^{-1}(g(t))$ where
-$g(t)$ is our measure.
+If we assume that $K$ is injective then we can define $K^{-1}:\;
+\im(K) \to L^2(\Omega)$, our problem now is to calculate
+$K^{-1}(g(t))$ where $g(t)$ is our measure.
 
 Recalling the SVE of $K$ we can write (for $g\in \im(K)$)
 \begin{equation}
@@ -413,8 +413,9 @@ dumps all components of it.
 
 \subsection{Tikhonov regularization with the new regularization matrix}
 
-A tradeoff between the two method can be constructed applying Tikhonov
-regularization using the following regularization matrix:
+A tradeoff between the two method is shown in \cite{modtikh}. It is
+constructed applying Tikhonov regularization using the following
+regularization matrix:
 \begin{equation*}
   \label{eq:modtikL}
   L_\mu = D _\mu V^T =
@@ -427,7 +428,7 @@ regularization using the following regularization matrix:
   V^T
 \end{equation*}
 
-The solution is
+The solution for this problem is:
 \begin{align*}
   x_\mu =& \pa{ A^T A + L_\mu^T L_\mu }^{-1} A^T \tilde b = \\
   = & \pa{ V \Sigma ^2 V^T + V D_\mu ^2 V^T} ^{-1} V\Sigma U^T \tilde
@@ -491,8 +492,7 @@ on the choice of the regularization parameter, this can be a number
 (integer or real) or a vector. We will consider integer number (for
 TSVD) or real number (for Tikhonov regularization).
 
-Various regularization methods has been studied, for example
-
+Various regularization methods has been studied, for example:
 \begin{itemize}
 \item Discrepancy principle
 \item L-curve method
@@ -515,7 +515,9 @@ solution) then we take
   \lambda _\varepsilon = \max \set { \lambda :\; \norm{ Ax_\lambda -
       \tilde b} \le \eta \norm{\varepsilon}} 
 \end{equation}
-where $\eta > 1$ is a user defined constant.
+where $\eta > 1$ is a user defined constant and $x_\lambda$ is the
+solution given by the regularization method with $\lambda$ as
+regularization parameter.
 
 In \cite{discrepbook} is shown that if $\norm{\varepsilon} \to 0$ then
 $x _\varepsilon \to x$
@@ -531,7 +533,8 @@ factors the discrepancy can be written as
   =& \sqrt{\sum _{i=1} ^n \bra{ \pa{ \varphi _i -1} \ang{ u_i, \tilde b} } ^2}
 \end{align*}
 where $F = \mathrm{diag}\pa{ \varphi _1 ,... , \varphi _n}$ with
-$\varphi _i$ are the filters factor for the choosen method.
+$\varphi _i$ are the filters factor for the choosen method (we set
+$\varphi _i = 0$ if $\sigma _i = 0$).
 
 If we are using the TSVD the discrepancy for the parameter $\alpha$ is
 given by
@@ -551,7 +554,7 @@ _{\mu,i} ' \ang{ u_i, \tilde b} ^2 \]
 
 \newpage
 \bibliographystyle{alpha}
-\bibliography{inversesturm,atmospheric,discrepbook,discreporig}
+\bibliography{inversesturm,atmospheric,discrepbook,discreporig,modtikh}
 
 
 \end{document}
