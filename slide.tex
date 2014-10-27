@@ -486,6 +486,164 @@
 \end{frame}
 
 
+\subsection{Una nuova matrice di regolarizzazione}
+
+\begin{frame}{La matrice}
+  Un compormesso tra i due metodi sopra esposti si trova utilizzando
+  la seguente matrice nella regolarizzazione di Tikhonov:
+  \[ L_\mu = D _\mu V^T \]
+  con
+  \[ D_\mu = \mathrm{diag}\pa{ \sqrt{\max\set{\mu ^2 - \sigma _1
+        ^2,0}} , ... \sqrt{\max\set{\mu ^2 - \sigma _n ^2,0}} } \]
+\end{frame}
+
+\begin{frame}{La soluzione}
+  Possiamo calcolare la soluzione a questo problema
+  \begin{align*}
+    x_\mu =& \pa{ A^T A + L_\mu^T L_\mu }^{-1} A^T \tilde b = \\
+    = & \pa{ V \Sigma ^2 V^T + V D_\mu ^2 V^T} ^{-1} V\Sigma U^T \tilde
+    b = \\
+    = & V \pa{ \Sigma ^2 + D_\mu ^2 } ^{-1} \Sigma U^T \tilde b \\
+    = & \sum _{i=1} ^k \frac{\sigma _i}{\sigma _i ^2 + \max\set{
+      \mu ^2 - \sigma _i ^2 ,0}  }  v_i \ang{u_i,\tilde b}
+  \end{align*}
+\end{frame}
+
+\begin{frame}{I fattori di filtro}
+  \begin{block}{Fattori di filtro del nuovo metodo}
+    \[ \varphi ^{\text{new}} _{\mu,i} = \frac{\sigma _i ^2}{\sigma _i ^2 + \max\set{
+        \mu ^2 - \sigma _i ^2 ,0}  } = \left\{
+      \begin{matrix}
+        1\; & \sigma _i \ge \mu \\
+        \frac{\sigma _i ^2}{\mu ^2} \; & \sigma _i < \mu
+      \end{matrix}
+    \right. \]
+  \end{block}
+  \vfill
+  
+  Quindi, come nella TSVD, non vengono attenuate le componenti con
+  $\sigma _i \ge \mu$, mentre le restanti vengono attenuate ma senza
+  essere eliminate.
+\end{frame}
+
+\begin{frame}{Ottimalità di $L_\mu ^T L_\mu$ in norma}
+  Vista la forma della soluzione $x_\mu = \pa{ A^T A + L_\mu^T L_\mu
+  }^{-1} A^T \tilde b$ possiamo aspettarci che la differenza tra il
+  problema originale sia in un qualche modo misurata da 
+  \[ \norm{ \pa{ A^T A + L_\mu^T L_\mu } - A^T A } \]
+  
+  D'altra parte vogliamo anche che il problema sia regolare, questa
+  proprietà si misura con il numero di condizionamento di $\pa{ A^T A
+    + L_\mu^T L_\mu }$, per quanto detto precedentemente possiamo
+  pensare di usare, per confrontare due matrici, il loro autovalore
+  più piccolo (supponendo che i metodi non modifichino di molto
+  l'autovalore più grande di $A^T A$.
+\end{frame}
+
+\begin{frame}
+  Abbiamo il seguente teorema:
+  \begin{myteo}
+    Sia $M \in \mathbb{R}^{n\times n}$ una matrice simmetrica con
+    fattorizzazione spettrale $M = V \Lambda V^T$, dove $V \in
+    \mathbb{R}^{n \times n}$ è ortogonale e  $\Lambda = \mathrm{diag} \pa{
+      \lambda _1, ... \lambda _n}$. Supponiamo che  $\eta \ge \min _{1\le
+      j\le n} \lambda _j$ e sia $C_\eta = \mathrm{diag}
+    \pa{ c_1 , ... c_n}\in \mathbb{R}^{n\times n}$ con componenti $c_j
+    = \max \set{\eta - \lambda _j, 0}$.
+    
+    Allora $M + V C_\eta V^T$ ha autovalore più piccolo $\eta$
+    e la distanza in norma 2 fra $M$ e la matrice simmetrica più vicina
+    con autovalore più piccolo $\eta$ è $\norm{ C_\eta }_2$
+  \end{myteo}
+  
+  Possiamo applicare questo teorema con $M = A^T A$ (e quindi $\lambda
+  _j = \sigma _j ^2$), $\eta = \mu ^2$ e $C_\eta = D_\mu ^2$
+  e otteniamo che questo metodo è ottimale in norma 2, in particolare
+  ritorna una soluzione più accurata del metodo di Tikhonov standard.
+\end{frame}
+
+\section{Scelta del parametro di regolarizzazione}
+
+\subsection{Introduzione}
+
+\begin{frame}{Il parametro}
+  Tutti i metodi che abbiamo visto dipendono dalla scelta di un
+  parametro di regolarizzazione, nei nostri casi questo parametro è un
+  intero oppure un reale.
+  \vfill
+
+  In altri metodi di regolarizzazione questo parametro potrebbe essere
+  anche un vettore, tralasceremo questo caso.
+\end{frame}
+
+\begin{frame}{Metodi}
+  Sono stati studiati vari metodi per la ricerca del parametro di
+  regolarizzazione, per esempio citiamo:
+  \begin{itemize}
+  \item Il discrepancy principle
+  \item Il metodo della L-cuve
+  \item La General Cross Validation (GCV)
+  \end{itemize}
+  \vfill
+  
+  Noi vedremo solo il primo.
+\end{frame}
+
+\subsection{Il discrepancy principle}
+
+\begin{frame}{Definizione}
+  Supponiamo di avere una buona approssimazione dell'errore di misura
+  $\norm{\varepsilon} = \norm{\tilde b - b}$, allora prendiamo la
+  soluzione più regolare che non superi tale soglia di errore, cioè
+  come parametro di regolarizzazione prendiamo:
+  \[ \lambda _\varepsilon = \max \set { \lambda :\; \norm{ Ax_\lambda -
+      \tilde b} \le \eta \norm{\varepsilon}} \]
+  (dove, per semplicità, abbiamo supposto che la soluzione diventi più
+  regolare al crescere di $\lambda$)
+
+  $\eta >1$ è una costante indipendente da $\norm{\varepsilon}$ data
+  dall'utente.
+\end{frame}
+
+\begin{frame}{Convergenza}
+  Si può mostrare che
+  \begin{block}{Convergenza nel discrepancy principle}
+    \[ \lim \limits _{\norm{\varepsilon} \to 0} x _\varepsilon = x \]
+  \end{block}
+  Dove $x_\varepsilon = x_{\lambda _ \varepsilon}$ è la soluzione
+  ottenuta regolarizzando con il parametro dato dal discrepancy
+  principle con $\norm{\varepsilon}$ e $x$ è la soluzione del problema
+  non perturbato.
+\end{frame}
+
+\begin{frame}{Discrepancy principle e fattori di filtro}
+  Se il nostro metodo può essere scritto con i fattori di filtro
+  allora possiamo scrivere
+  \begin{align*}
+    \norm{ Ax_\lambda - \tilde b } =& \norm{ U \Sigma V^T V F \Sigma
+      ^{-1} U^T \tilde b - \tilde b} =\\
+    =& \norm { U F U^T \tilde b - \tilde b} =\\
+    = & \norm{ F U^T \tilde b - U^T \tilde b } =\\
+    =& \norm{ \pa{F-I} U^T \tilde b} =\\
+    =& \sqrt{\sum _{i=1} ^n \bra{ \pa{ \varphi _i -1} \ang{ u_i, \tilde b} } ^2}
+  \end{align*}
+\end{frame}
+
+\begin{frame}{Calcolo del parametro di regolarizzazione}
+  Per i metodi che abbiamo visto il calcolo del parametro di
+  regolarizzazione può essere fatto con:
+  \begin{itemize}
+  \item per la TSVD abbiamo $\norm{ Ax_\alpha - \tilde b } =
+    \sqrt{\sum _{i=\alpha +1} ^n \bra{ \ang{ u_i, \tilde b} } ^2 }$ e
+    la soluzione di $\norm{ Ax_\alpha - \tilde b } <\eta
+    \norm{\varepsilon}$ si trova esaminando i possibili $n$ valori di
+    $\alpha$
+  \item Per il metodo di Tikhonov possiamo applicare il metodo di
+    Newton alla funzione \[f(\mu) = \sum _{i=1} ^n \bra{ \pa{ \varphi
+        _{\mu,i} -1} \ang{ u_i, \tilde b} } ^2 - \eta ^2
+    \norm{\varepsilon} ^2 \].
+  \end{itemize}
+\end{frame}
 
 
 
