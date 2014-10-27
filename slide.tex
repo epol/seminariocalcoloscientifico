@@ -205,11 +205,11 @@
     & \sum _{i\in \mathbb{N}} \pa{ \frac{1}{\sigma _i} \ang{\tilde
         g,u_i}} ^2 = \sum _{i\in \mathbb{N}} \pa{ \frac{1}{\sigma _i}
       \ang{g + \varepsilon,u_i}} ^2
-    = \\
-    =&\underbrace{\sum _{i\in \mathbb{N}} \pa{
-          \frac{1}{\sigma _i} \ang{g,u_i}} ^2} _{<\infty}
-    + \underbrace{\sum _{i\in \mathbb{N}} \pa{ \frac{1}{\sigma _i}
-      \ang{\varepsilon,u_i}} ^2} _{???}
+%    = \\
+%    =&\underbrace{\sum _{i\in \mathbb{N}} \pa{
+%          \frac{1}{\sigma _i} \ang{g,u_i}} ^2} _{<\infty}
+%    + \underbrace{\sum _{i\in \mathbb{N}} \pa{ \frac{1}{\sigma _i}
+%      \ang{\varepsilon,u_i}} ^2} _{???}
   \end{align*}
 \end{frame}
 
@@ -494,7 +494,7 @@
   \[ L_\mu = D _\mu V^T \]
   con
   \[ D_\mu = \mathrm{diag}\pa{ \sqrt{\max\set{\mu ^2 - \sigma _1
-        ^2,0}} , ... \sqrt{\max\set{\mu ^2 - \sigma _n ^2,0}} } \]
+        ^2,0}} , ..., \sqrt{\max\set{\mu ^2 - \sigma _n ^2,0}} } \]
 \end{frame}
 
 \begin{frame}{La soluzione}
@@ -537,7 +537,7 @@
     + L_\mu^T L_\mu }$, per quanto detto precedentemente possiamo
   pensare di usare, per confrontare due matrici, il loro autovalore
   più piccolo (supponendo che i metodi non modifichino di molto
-  l'autovalore più grande di $A^T A$.
+  l'autovalore più grande di $A^T A$).
 \end{frame}
 
 \begin{frame}
@@ -645,6 +645,154 @@
   \end{itemize}
 \end{frame}
 
+\section{Esperimenti numerici}
+
+\subsection{Implementazione}
+
+\begin{frame}{Linguaggio}
+  I metodi sopra descritti sono stati implementati in Python 2.7.3 con
+  l'ausilio della libreria numpy 1.6.2 per i calcoli numerici e pytave
+  r51 per poter utilizzare la libreria regtools (scritta da  Per
+  Christian Hansen in MATLAB) da cui sono stati ottenuti gli esempi.
+  \vfill
+  
+  L'aritmetica usata è a 64 bit con precisione $2\cdot 10^{-16}$.
+\end{frame}
+
+\begin{frame}{Esempi}
+  Sono stati usati tre esempi dalla libreria regtools risultati dalla
+  discretizzazione di equazioni integrali di Fredholm
+  \begin{center}
+    \begin{tabular}[c]{c | c}
+      \textbf{Problem} & \textbf{Discretization} \\
+      \hline
+      phillips & Galkerin \\
+      shaw & quadrature \\
+      ilaplace & quadrature 
+    \end{tabular}
+  \end{center}
+  \vfill
+  
+  Ogni esempio è stato testato modificando il vettore dei termini noti
+  $b$ con un errore relativo del $0.1\%, 1\%, 5\%$ e $10\%$ per poi
+  applicare i tre metodi studiati.  
+\end{frame}
+
+\subsection{phillips}
+
+\begin{frame}{Risultati}
+  Vediamo l'errore relativo $\frac{\norm{\tilde x - x}}{\norm{x}}$
+  ottenuto coi vari metodi
+  \begin{center}
+    \include{phillips}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \centering
+    \includegraphics[keepaspectratio,width=270px]{phillips_100.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \centering
+    \includegraphics[keepaspectratio,width=270px]{phillips_50.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \centering
+    \includegraphics[keepaspectratio,width=270px]{phillips_10.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \centering
+    \includegraphics[keepaspectratio,width=270px]{phillips_1.png}
+  \end{figure}
+\end{frame}
+
+
+\subsection{shaw}
+
+\begin{frame}{Risultati}
+  Vediamo l'errore relativo $\frac{\norm{\tilde x - x}}{\norm{x}}$
+  ottenuto coi vari metodi
+  \begin{center}
+    \include{shaw}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \centering
+    \includegraphics[keepaspectratio,width=270px]{shaw_100.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \centering
+    \includegraphics[keepaspectratio,width=270px]{shaw_50.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \centering
+    \includegraphics[keepaspectratio,width=270px]{shaw_10.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \centering
+    \includegraphics[keepaspectratio,width=270px]{shaw_1.png}
+  \end{figure}
+\end{frame}
+
+
+\subsection{ilaplace}
+
+\begin{frame}{Risultati}
+  Vediamo l'errore relativo $\frac{\norm{\tilde x - x}}{\norm{x}}$
+  ottenuto coi vari metodi
+  \begin{center}
+    \include{ilaplace}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \centering
+    \includegraphics[keepaspectratio,width=270px]{ilaplace_100.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \centering
+    \includegraphics[keepaspectratio,width=270px]{ilaplace_50.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \centering
+    \includegraphics[keepaspectratio,width=270px]{ilaplace_10.png}
+  \end{figure}
+\end{frame}
+
+\begin{frame}
+  \begin{figure}
+    \centering
+    \includegraphics[keepaspectratio,width=270px]{ilaplace_1.png}
+  \end{figure}
+\end{frame}
 
 
 
