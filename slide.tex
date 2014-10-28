@@ -204,7 +204,9 @@
   \begin{align*}
     & \sum _{i\in \mathbb{N}} \pa{ \frac{1}{\sigma _i} \ang{\tilde
         g,u_i}} ^2 = \sum _{i\in \mathbb{N}} \pa{ \frac{1}{\sigma _i}
-      \ang{g + \varepsilon,u_i}} ^2
+      \ang{g + \varepsilon,u_i}} ^2 = \\
+    = & \sum _{i\in \mathbb{N}} \pa{ \frac{1}{\sigma _i}        
+      \pa{ \ang{g, u_i} + \ang{ \varepsilon, u_i } } }
 %    = \\
 %    =&\underbrace{\sum _{i\in \mathbb{N}} \pa{
 %          \frac{1}{\sigma _i} \ang{g,u_i}} ^2} _{<\infty}
@@ -215,7 +217,7 @@
 
 \begin{frame}{Discretizzazione}
   Per risolvere numericamente un'equazione integrale di Fredholm
-  dobbiamo discretizzare il probelema, possiamo decidere di farlo
+  dobbiamo discretizzare il problema, possiamo decidere di farlo
   prima o dopo la regolarizzazione.
   \vfill
   
@@ -313,6 +315,16 @@
 \section{Metodi di regolarizzazione}
 
 \subsection{Introduzione}
+
+\begin{frame}{Esempio}
+  \begin{figure}
+    \centering
+    \includegraphics[keepaspectratio,width=190px]{phillips_unreg_-6.png}
+    \caption{Problema phillips con un errore relativo di $10^{-6}$ sul
+      vettore dei termini noti}
+  \end{figure}
+\end{frame}
+
 
 \begin{frame}{Problema}
   Supponiamo di avere $A\in \mathbb{R}^{m \times n}$ mal condizionata
@@ -581,7 +593,7 @@
   regolarizzazione, per esempio citiamo:
   \begin{itemize}
   \item Il discrepancy principle
-  \item Il metodo della L-cuve
+  \item Il metodo della L-curve
   \item La General Cross Validation (GCV)
   \end{itemize}
   \vfill
